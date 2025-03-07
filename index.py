@@ -58,6 +58,7 @@ def main():
 
 	product_img = st.empty()
 	st.text("※商品紹介の音声は、画像を元にAIを用いて生成されているため、すべてが正しい情報とは限りません。詳しい説明は店頭のスタッフにお尋ねください。")
+	st.image(config["mobile_qr"])
 	while True:
 		for img_link in (soup.find('div', {'class': 'wsprd_row wsprd_row-2'}).find_all('img')):
 			img_src = config["loading_page"] + img_link.get('src')[2:]
