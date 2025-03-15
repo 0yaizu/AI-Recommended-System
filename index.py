@@ -1,4 +1,4 @@
-import io, requests, json, re, time, base64
+import io, requests, json, re, time, base64, qrcode
 from PIL import Image
 import google.generativeai as genai
 import streamlit as st
@@ -47,6 +47,8 @@ def vvox_test(text):
 	voice = synthesis.content
 	return voice
 
+st.set_page_config(page_title="今週のおすすめ商品", page_icon="🎉", layout="centered")
+
 def main():
 	# Streamlit
 	st.title("今週のおすすめ商品")
@@ -58,7 +60,13 @@ def main():
 
 	product_img = st.empty()
 	st.text("※商品紹介の音声は、画像を元にAIを用いて生成されているため、すべてが正しい情報とは限りません。詳しい説明は店頭のスタッフにお尋ねください。")
-	st.image(config["mobile_qr"])
+	img_byte_array = io.BytesIO()
+	qrimg = qrcode.make(config["mobile_qr"])
+	qrimg.save(img_byte_array, format='PNG')
+	_, qr_stimg, _ = st.columns([1, 3, 1])
+	with qr_stimg:
+		st.image(img_byte_array, width=500)
+	st.title("↑モバイル会員のご登録はこちら↑")
 	while True:
 		for img_link in (soup.find('div', {'class': 'wsprd_row wsprd_row-2'}).find_all('img')):
 			img_src = config["loading_page"] + img_link.get('src')[2:]
